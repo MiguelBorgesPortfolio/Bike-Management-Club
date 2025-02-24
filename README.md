@@ -62,9 +62,5 @@ The system enables the management of **members, events, and event types**, ensur
 
 ---
 
-## 🚀 Future Improvements  
-- Implement **user authentication & role-based access control**.  
-- Improve **error handling and validation messages**.  
-- Add **event analytics and reports**.  
 
  
