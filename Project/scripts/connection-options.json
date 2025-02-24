@@ -1,0 +1,6 @@
+{
+    "host": "localhost",
+    "user": "ests_event_usr",
+    "password": "ESTSEvent@PW",
+    "database": "ests_event_db"
+}

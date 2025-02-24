@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: script.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: script.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+/**
+ * @file Classes para implementar uma calculadora.
+ * @author Miguel Borges 202200252  202200252@estudantes.ips.pt
+ * @author Afonso Matos  202200232  202200232@estudantes.ips.pt
+ * @version 1.0.0
+ */
+
+/**
+ * Mostra a secção especificada e esconde as outras secções.
+ * @param {string} sectionId - O ID da secção a ser mostrada.
+ */
+function showSection(sectionId) {
+    document.getElementById('eventos-section').style.display = 'none';
+    document.getElementById('tipos-eventos-section').style.display = 'none';
+    document.getElementById('membros-section').style.display = 'none';
+    document.getElementById(sectionId).style.display = 'block';
+
+    
+    if (sectionId !== 'eventos-section') {
+        fecharFormularioEvento();
+    }
+}
+
+/**
+ * Representa um evento.
+ */
+class Evento {
+    /**
+     * Cria uma instância de Evento.
+     * @param {number} id - O ID do evento.
+     * @param {string} tipo - O tipo do evento.
+     * @param {string} descritivo - A descrição do evento.
+     * @param {string} data - A data do evento no formato YYYY-MM-DD.
+     */
+    constructor(id, tipo, descritivo, data) {
+        this.id = id;
+        this.tipo = tipo;
+        this.descritivo = descritivo;
+        this.data = data;
+    }
+}
+
+/**
+ * Representa um tipo de evento.
+ */
+
+class TipoEvento {
+    /**
+     * Cria uma instância de TipoEvento.
+     * @param {number} id - O ID do tipo de evento.
+     * @param {string} descritivo - A descrição do tipo de evento.
+     */
+    constructor(id, descritivo) {
+        this.id = id;
+        this.descritivo = descritivo;
+    }
+}
+
+const eventos = [
+    new Evento(1, "Estrada", "Teste Estrada Novembro", "2025-11-01"),
+    new Evento(2, "BTT", "Teste BTT", "2025-11-30"),
+    new Evento(3, "Estrada", "Teste Estrada Dezembro", "2025-12-01"),
+    new Evento(4, "Pista", "Teste Pista Dezembro", "2025-12-15"),
+];
+
+const tiposEventos = [
+    new TipoEvento(1, "Estrada"),
+    new TipoEvento(2, "BTT"),
+    new TipoEvento(3, "BMX"),
+    new TipoEvento(4, "Pista"),
+    new TipoEvento(5, "Ciclocrosse"),
+    new TipoEvento(6, "Cicloturismo"),
+];
+
+
+/**
+ * Cria uma célula de tabela com texto.
+ * @param {string} texto - O texto a ser exibido na célula.
+ * @param {string} classe - A classe CSS a ser adicionada à célula.
+ * @returns {HTMLTableCellElement} A célula criada.
+ */
+function criarCelulaTexto(texto, classe) {
+    const cell = document.createElement('td');
+    cell.classList.add(classe);
+    const span = document.createElement('span');
+    span.classList.add('cell-content');
+    span.appendChild(document.createTextNode(texto));
+    cell.appendChild(span);
+    return cell;
+}
+
+
+
+let linhaSelecionada = null;
+
+/**
+ * Seleciona ou desmarca a linha clicada.
+ * @param {MouseEvent} event - O evento de clique na linha.
+ */
+function selecionarLinha(event) {
+    if (linhaSelecionada === event.currentTarget) {
+        linhaSelecionada.classList.remove('selected-row')
+        linhaSelecionada = null;
+    } else {
+        if (linhaSelecionada) {
+            linhaSelecionada.classList.remove('selected-row');
+        }
+        linhaSelecionada = event.currentTarget;
+        linhaSelecionada.classList.add('selected-row');
+    }
+}
+
+/**
+ * Abre o formulário para criar um novo tipo de evento.
+ */
+function criarTipoEvento() {
+    document.getElementById('formulario-tipo-evento').style.display = 'block';
+    document.getElementById('descritivo-input').value = '';
+    document.getElementById('aviso').style.display = 'none';
+    linhaSelecionada = null; 
+}
+
+/**
+ * Abre o formulário para editar o tipo de evento selecionado.
+ */
+function editarTipoEvento() {
+    const avisoSelecao = document.getElementById('aviso-selecao');
+    const avisoDescritivo = document.getElementById('aviso');
+
+    if (!linhaSelecionada) {
+        avisoSelecao.style.display = 'block';
+        
+        setTimeout(() => {
+            avisoSelecao.style.display = "none";
+        }, 3000);
+        return;
+    }
+    
+    avisoSelecao.style.display = 'none';
+
+    
+    const descritivo = linhaSelecionada.querySelector('.tipo-descritivo').textContent;
+    document.getElementById('descritivo-input').value = descritivo;
+    document.getElementById('formulario-tipo-evento').style.display = 'block';
+    avisoDescritivo.style.display = 'none';
+    
+}
+
+/**
+ * Apaga o tipo de evento selecionado.
+ */
+function apagarTipoEvento() {
+    const avisoSelecao = document.getElementById('aviso-selecao-apagar');
+
+    if (!linhaSelecionada) {
+        avisoSelecao.textContent = 'Por favor, selecione um tipo de evento para apagar.';
+        avisoSelecao.style.display = 'block';
+
+        setTimeout(() => {
+            avisoSelecao.style.display = "none";
+        }, 3000);
+        return;
+    }
+
+    const index = Array.from(document.querySelectorAll('#tipos-eventos-body tr')).indexOf(linhaSelecionada);
+    const tipoSelecionado = tiposEventos[index].descritivo;
+
+    const tipoEmUso = eventos.some(evento => evento.tipo.toLowerCase() === tipoSelecionado.toLowerCase());
+
+    if (tipoEmUso) {
+        avisoSelecao.textContent = 'Não é possível apagar este tipo de evento, pois ele está associado a um ou mais eventos.';
+        avisoSelecao.style.display = 'block';
+
+        setTimeout(() => {
+            avisoSelecao.style.display = "none";
+        }, 3000);
+        return;
+    }
+
+    const tipoFavoritoDeMembro = membros.some(membro =>
+        membro.tipos.some(tipo => tipo.toLowerCase() === tipoSelecionado.toLowerCase())
+    );
+    if (tipoFavoritoDeMembro) {
+        avisoSelecao.textContent = 'Não é possível apagar este tipo de evento, pois ele está selecionado como favorito por um ou mais membros.';
+        avisoSelecao.style.display = 'block';
+
+        setTimeout(() => {
+            avisoSelecao.style.display = "none";
+        }, 3000);
+        return;
+    }
+    tiposEventos.splice(index, 1);
+    renderTiposEventos();
+    avisoSelecao.style.display = 'none';
+    linhaSelecionada = null;
+}
+
+/**
+ * Guarda o tipo de evento, seja criando um novo ou editando o existente.
+ */
+function gravarTipoEvento() {
+    const descritivoInput = document.getElementById('descritivo-input');
+    const aviso = document.getElementById('aviso');
+    const descritivo = descritivoInput.value.trim();
+
+    if (!descritivo) {
+        aviso.textContent = 'O descritivo não pode estar vazio.';
+        aviso.style.display = 'block';
+
+        setTimeout(() => {
+            aviso.style.display = "none";
+        }, 3000);
+
+        return;
+    }
+
+    aviso.style.display = 'none';
+
+    if (linhaSelecionada) {
+        const descritivoAtual = linhaSelecionada.querySelector('.tipo-descritivo').textContent.trim();
+
+        const tipoExistente = tiposEventos.some(tipo => tipo.descritivo.toLowerCase() === descritivo.toLowerCase() &amp;&amp; tipo.descritivo.toLowerCase() !== descritivoAtual.toLowerCase());
+
+        if (tipoExistente) {
+            aviso.textContent = 'Já existe um tipo de evento com esse descritivo.';
+            aviso.style.display = 'block';
+            setTimeout(() => {
+                aviso.style.display = "none";
+            }, 3000);
+            return;
+        }
+
+        const index = Array.from(document.querySelectorAll('#tipos-eventos-body tr')).indexOf(linhaSelecionada);
+        tiposEventos[index].descritivo = descritivo;
+    } else {
+        const tipoExistente = tiposEventos.some(tipo => tipo.descritivo.toLowerCase() === descritivo.toLowerCase());
+        if (tipoExistente) {
+            aviso.textContent = 'Já existe um tipo de evento com esse descritivo.';
+            aviso.style.display = 'block';
+            setTimeout(() => {
+                aviso.style.display = "none";
+            }, 3000);
+            return;
+        } else {
+            const novoId = tiposEventos.length + 1;
+            const novoTipo = new TipoEvento(novoId, descritivo);
+            tiposEventos.push(novoTipo);
+        }
+    }
+    fecharFormularioTipoEvento();
+    renderTiposEventos();
+    linhaSelecionada = null; 
+}
+
+/**
+ * Fecha o formulário de tipo de evento e limpa os campos.
+ */
+function fecharFormularioTipoEvento() {
+    document.getElementById('formulario-tipo-evento').style.display = 'none';
+    document.getElementById('descritivo-input').value = '';
+}
+
+/**
+ * Renderiza a lista de tipos de eventos na tabela.
+ */
+function renderTiposEventos() {
+    const tbody = document.getElementById('tipos-eventos-body');
+    tbody.replaceChildren();
+
+    if (tiposEventos.length === 0) {
+        const row = document.createElement('tr');
+        const cell = criarCelulaTexto('Nenhum tipo de evento disponível', 'no-data');
+        cell.colSpan = 2;
+        row.appendChild(cell);
+        tbody.appendChild(row);
+    } else {
+        tiposEventos.forEach(tipoEvento => {
+            const row = document.createElement('tr');
+            row.classList.add('tipo-event-row');
+            row.appendChild(criarCelulaTexto(tipoEvento.id, 'tipo-id'));
+            row.appendChild(criarCelulaTexto(tipoEvento.descritivo, 'tipo-descritivo'));
+
+            row.addEventListener('click', selecionarLinha);
+            tbody.appendChild(row);
+        });
+    }
+
+    atualizarDropdownTiposEventos();
+    atualizarCheckboxesTiposEventos()
+}
+
+
+
+let linhaSelecionadaEvento = null;
+
+/**
+ * Renderiza a lista de eventos na tabela correspondente.
+ */
+
+function renderEventos() {
+    const tbody = document.getElementById('eventos-body');
+    tbody.replaceChildren();
+
+    if (eventos.length === 0) {
+        const row = document.createElement('tr');
+        const cell = criarCelulaTexto('Nenhum evento disponível', 'no-data');
+        cell.colSpan = 4;
+        row.appendChild(cell);
+        tbody.appendChild(row);
+    } else {
+        eventos.forEach((evento, index) => {
+            const row = document.createElement('tr');
+            row.classList.add('evento-row');
+            row.appendChild(criarCelulaTexto(evento.id, 'evento-id'));
+            row.appendChild(criarCelulaTexto(evento.tipo, 'evento-tipo'));
+            row.appendChild(criarCelulaTexto(evento.descritivo, 'evento-descritivo'));
+            row.appendChild(criarCelulaTexto(evento.data, 'evento-data'));
+
+            row.addEventListener('click', () => selecionarLinhaEvento(row, index));
+            tbody.appendChild(row);
+        });
+    }
+}
+
+/**
+ * Seleciona ou desmarca a linha de um evento na tabela.
+ * @param {HTMLElement} row - A linha da tabela a ser selecionada.
+ * @param {number} index - O índice do evento na lista de eventos.
+ */
+function selecionarLinhaEvento(row, index) {
+    if (linhaSelecionadaEvento === index) {
+        row.classList.remove('selected-row');
+        linhaSelecionadaEvento = null;
+    } else {
+        if (linhaSelecionadaEvento !== null) {
+            document.querySelector('.selected-row')?.classList.remove('selected-row');
+        }
+        row.classList.add('selected-row');
+        linhaSelecionadaEvento = index;
+    }
+}
+
+/**
+ * Abre o formulário para adicionar ou editar eventos, garantindo que a secção de eventos está visível.
+ */
+function abrirFormularioEvento() {
+    const section = document.getElementById('eventos-section');
+    if (section.style.display === 'block') { 
+        document.getElementById('formulario-evento').style.display = 'block';
+        document.getElementById('aviso-evento').style.display = 'none';
+        limparCamposFormularioEvento();
+        linhaSelecionadaEvento = null;
+    }
+}
+
+/**
+ * Fecha o formulário de evento e limpa os campos.
+ */
+function fecharFormularioEvento() {
+    document.getElementById('formulario-evento').style.display = 'none';
+    limparCamposFormularioEvento();
+}
+
+
+/**
+ * Guarda um evento, seja criando um novo ou editando um existente.
+ */
+function gravarEvento() {
+    const tipo = document.getElementById('tipo-input').value.trim();
+    const descritivo = document.getElementById('descritivo-input-evento').value.trim();
+    const data = document.getElementById('data-input').value.trim();
+    const avisoEvento = document.getElementById('aviso-evento');
+
+    if (!tipo || !descritivo || !data) {
+        avisoEvento.textContent = 'Todos os campos devem ser preenchidos.';
+        avisoEvento.style.display = 'block';
+
+        setTimeout(() => {
+            avisoEvento.style.display = "none";
+        }, 3000);
+
+        return;
+    }
+
+     const dataSelecionada = new Date(data);
+     const hoje = new Date();
+     hoje.setHours(0, 0, 0, 0); 
+ 
+     if (dataSelecionada &lt; hoje) {
+         avisoEvento.textContent = 'A data deve ser um dia futuro.';
+         avisoEvento.style.display = 'block';
+ 
+         setTimeout(() => {
+             avisoEvento.style.display = "none";
+         }, 3000);
+ 
+         return;
+     }
+
+    if (linhaSelecionadaEvento === null) {
+        const eventoExistente = eventos.some(evento =>
+            evento.tipo.toLowerCase() === tipo.toLowerCase() &amp;&amp;
+            evento.descritivo.toLowerCase() === descritivo.toLowerCase() &amp;&amp;
+            evento.data === data
+        );
+
+        if (eventoExistente) {
+            avisoEvento.textContent = 'Já existe um evento com esse tipo, descritivo e data.';
+            avisoEvento.style.display = 'block';
+
+            setTimeout(() => {
+                avisoEvento.style.display = "none";
+            }, 3000);
+            return;
+        }
+    }
+
+    avisoEvento.style.display = 'none';
+
+    if (linhaSelecionadaEvento !== null) {
+        eventos[linhaSelecionadaEvento].tipo = tipo;
+        eventos[linhaSelecionadaEvento].descritivo = descritivo;
+        eventos[linhaSelecionadaEvento].data = data;
+    } else {
+        const novoId = eventos.length + 1;
+        const novoEvento = new Evento(novoId, tipo, descritivo, data);
+        eventos.push(novoEvento);
+    }
+
+    fecharFormularioEvento();
+    renderEventos();
+    linhaSelecionadaEvento = null;
+}
+
+
+/**
+ * Preenche o formulário com os dados de um evento selecionado para edição.
+ */
+function editarEvento() {
+    const avisoEvento = document.getElementById('aviso-selecao-evento');
+    if (linhaSelecionadaEvento === null) {
+        avisoEvento.textContent = 'Por favor, selecione um evento para editar.';
+        avisoEvento.style.display = 'block';
+
+        setTimeout(() => {
+            avisoEvento.style.display = "none";
+        }, 3000);
+
+        return;
+    }
+
+    const eventoSelecionado = eventos[linhaSelecionadaEvento];
+    document.getElementById('tipo-input').value = eventoSelecionado.tipo;
+    document.getElementById('descritivo-input-evento').value = eventoSelecionado.descritivo;
+    document.getElementById('data-input').value = eventoSelecionado.data;
+    document.getElementById('formulario-evento').style.display = 'block';
+    avisoEvento.style.display = 'none';
+}
+
+/**
+ * Apaga o evento selecionado, se possível. 
+ * Verifica se o evento está associado a algum membro antes de removê-lo.
+ */
+function apagarEvento() {
+    const avisoEvento = document.getElementById('aviso-selecao-evento');
+
+    if (linhaSelecionadaEvento === null) {
+        avisoEvento.textContent = 'Por favor, selecione um evento para apagar.';
+        avisoEvento.style.display = 'block';
+
+        setTimeout(() => {
+            avisoEvento.style.display = "none";
+        }, 3000);
+
+        return;
+    }
+
+    const eventoSelecionado = eventos[linhaSelecionadaEvento];
+
+    const eventoEmUso = membros.some(membro => 
+        membro.eventos &amp;&amp; membro.eventos.some(e => e.descritivo === eventoSelecionado.descritivo)
+    );
+
+    if (eventoEmUso) {
+        avisoEvento.textContent = 'Não é possível apagar este evento, pois ele está associado a um ou mais membros.';
+        avisoEvento.style.display = 'block';
+
+        setTimeout(() => {
+            avisoEvento.style.display = "none";
+        }, 3000);
+
+        return;
+    }
+
+    eventos.splice(linhaSelecionadaEvento, 1);
+    linhaSelecionadaEvento = null;
+    avisoEvento.style.display = 'none';
+    renderEventos();
+}
+
+/**
+ * Limpa os campos do formulário de evento, deixando-os em branco.
+ */
+function limparCamposFormularioEvento() {
+    document.getElementById('tipo-input').value = '';
+    document.getElementById('descritivo-input-evento').value = '';
+    document.getElementById('data-input').value = '';
+}
+
+/**
+ * Atualiza as opções do dropdown de tipos de eventos com base nos tipos disponíveis.
+ */
+function atualizarDropdownTiposEventos() {
+    const dropdown = document.getElementById('tipo-input');
+    dropdown.replaceChildren(); 
+
+    const opcaoPadrao = document.createElement('option');
+    opcaoPadrao.value = '';
+    opcaoPadrao.textContent = 'Selecione o tipo';
+    dropdown.appendChild(opcaoPadrao);
+
+    tiposEventos.forEach(tipoEvento => {
+        const opcao = document.createElement('option');
+        opcao.value = tipoEvento.descritivo;
+        opcao.textContent = tipoEvento.descritivo;
+        dropdown.appendChild(opcao);
+    });
+}
+
+
+const membros = [
+    { id: 1, nome: "João Silva", tipos: ["Estrada", "BTT"] },
+    { id: 2, nome: "Maria Oliveira", tipos: ["Ciclocrosse"] },
+    { id: 3, nome: "Carlos Ferreira", tipos: ["BMX", "Pista"] }
+];
+
+let membroSelecionadoId = null;
+
+/**
+ * Atualiza a tabela de membros na interface com os dados da lista de membros.
+ */
+function atualizarTabelaMembros() {
+    const tabelaCorpo = document.getElementById("membros-body");
+
+    while (tabelaCorpo.firstChild) {
+        tabelaCorpo.removeChild(tabelaCorpo.firstChild);
+    }
+
+    membros.forEach((membro) => {
+        const linha = document.createElement("tr");
+        linha.dataset.id = membro.id;
+
+        const colunaId = document.createElement("td");
+        colunaId.textContent = membro.id;
+
+        const colunaNome = document.createElement("td");
+        colunaNome.textContent = membro.nome;
+
+        linha.appendChild(colunaId);
+        linha.appendChild(colunaNome);
+
+        linha.addEventListener("click", () => selecionarOuDeselecionarLinha(linha));
+
+        tabelaCorpo.appendChild(linha);
+    });
+}
+
+/**
+ * Seleciona ou deseleciona uma linha na tabela de membros.
+ * @param {HTMLElement} linha - A linha da tabela a ser selecionada ou deselecionada.
+ */
+function selecionarOuDeselecionarLinha(linha) {
+    const idLinha = parseInt(linha.dataset.id, 10);
+
+    if (membroSelecionadoId === idLinha) {
+        linha.classList.remove("selected-row");
+        membroSelecionadoId = null;
+    } else {
+        const linhas = document.querySelectorAll("#membros-body tr");
+        linhas.forEach((linha) => linha.classList.remove("selected-row"));
+
+        linha.classList.add("selected-row");
+        membroSelecionadoId = idLinha;
+    }
+}
+
+/**
+ * Abre o formulário para adicionar ou editar membros.
+ * Esconde a seção de eventos e limpa os campos do formulário.
+ */
+function abrirFormularioMembro() {
+    document.getElementById("eventos").style.display = "none";
+    document.getElementById("formulario-membro").style.display = "block";
+    document.getElementById("nome-input").value = "";
+    document.querySelectorAll(".tipo-evento").forEach((input) => (input.checked = false));
+    membroSelecionadoId = null;
+}
+
+/**
+ * Fecha o formulário de membros e esconde o aviso de validação.
+ */
+function fecharFormularioMembro() {
+    document.getElementById("formulario-membro").style.display = "none";
+    document.getElementById("aviso-membro").style.display = "none";
+}
+
+/**
+ * Grava ou atualiza um membro com base nos dados do formulário.
+ * Valida a entrada e atualiza a lista de membros.
+ */
+function gravarMembro() {
+    const nomeInput = document.getElementById("nome-input").value.trim();
+    const tiposSelecionados = Array.from(
+        document.querySelectorAll(".tipo-evento:checked")
+    ).map((checkbox) => checkbox.value);
+
+    if (!nomeInput) {
+        document.getElementById("aviso-membro").style.display = "block";
+        return;
+    }
+
+    if (membroSelecionadoId !== null) {
+        const membro = membros.find((m) => m.id === membroSelecionadoId);
+        membro.nome = nomeInput;
+        membro.tipos = tiposSelecionados;
+    } else {
+        const novoId = membros.length > 0 ? membros[membros.length - 1].id + 1 : 1;
+        membros.push({ id: novoId, nome: nomeInput, tipos: tiposSelecionados });
+    }
+
+    fecharFormularioMembro();
+    atualizarTabelaMembros();
+}
+
+/**
+ * Abre o formulário de edição de membro, preenchendo os dados do membro selecionado.
+ * Caso nenhum membro esteja selecionado, exibe um aviso.
+ */
+function editarMembro() {
+    if (membroSelecionadoId === null) {
+        document.getElementById("aviso-selecao-membro").style.display = "block";
+
+        setTimeout(() => {
+            document.getElementById("aviso-selecao-membro").style.display = "none";
+        }, 3000);
+
+        return;
+    }
+
+    document.getElementById("aviso-selecao-membro").style.display = "none";
+    document.getElementById("eventos").style.display = "block";
+
+    const membro = membros.find((m) => m.id === membroSelecionadoId);
+
+    if (membro) {
+        document.getElementById("nome-input").value = membro.nome;
+        document.querySelectorAll(".tipo-evento").forEach((input) => {
+            input.checked = membro.tipos.includes(input.value);
+        });
+
+        atualizarTabelaEventosDoMembro(membro);
+
+        document.getElementById("formulario-membro").style.display = "block";
+    } else {
+        console.error("Membro não encontrado para editar.");
+    }
+}
+
+/**
+ * Apaga o membro selecionado da lista de membros.
+ * Caso nenhum membro esteja selecionado, exibe um aviso.
+ */
+function apagarMembro() {
+    if (membroSelecionadoId === null) {
+        document.getElementById("aviso-selecao-membro").style.display = "block";
+
+        setTimeout(() => {
+            document.getElementById("aviso-selecao-membro").style.display = "none";
+        }, 3000);
+        return;
+    }
+
+    const indice = membros.findIndex((m) => m.id === membroSelecionadoId);
+    if (indice > -1) membros.splice(indice, 1);
+
+    membroSelecionadoId = null;
+    atualizarTabelaMembros();
+}
+
+/**
+ * Atualiza a lista de checkboxes com os tipos de eventos disponíveis no formulário de membros.
+ */
+function atualizarCheckboxesTiposEventos() {
+    const fieldset = document.querySelector('#formulario-membro fieldset');
+    fieldset.replaceChildren(); 
+
+    const legend = document.createElement('legend');
+    legend.textContent = 'Tipos de Eventos Preferidos:';
+    fieldset.appendChild(legend);
+
+    tiposEventos.forEach(tipoEvento => {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = tipoEvento.descritivo;
+        checkbox.classList.add('tipo-evento');
+
+        const label = document.createElement('label');
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(` ${tipoEvento.descritivo}`));
+
+        fieldset.appendChild(label);
+
+        const br = document.createElement('br');
+        fieldset.appendChild(br);
+    });
+}
+
+
+document.getElementById("btn-criar").addEventListener("click", abrirFormularioMembro);
+document.getElementById("btn-editar").addEventListener("click", editarMembro);
+document.getElementById("btn-apagar").addEventListener("click", apagarMembro);
+document.getElementById("btn-gravar").addEventListener("click", gravarMembro);
+document.getElementById("btn-cancelar").addEventListener("click", fecharFormularioMembro);
+
+atualizarTabelaMembros();
+
+/**
+ * Abre o formulário de inscrição em eventos para o membro selecionado.
+ * Filtra os eventos disponíveis com base nos tipos preferidos do membro.
+ */
+function abrirFormularioInscricaoEvento() {
+    const aviso = document.getElementById('aviso-membro-inscricao');
+
+    if (membroSelecionadoId === null) {
+        aviso.textContent = "Por favor, selecione um membro.";
+        aviso.style.display = "block";
+        
+        setTimeout(() => {
+            aviso.style.display = "none";
+        }, 3000);
+
+        return;
+    }
+
+    const membroSelecionado = membros.find((membro) => membro.id === membroSelecionadoId);
+    if (!membroSelecionado || !membroSelecionado.tipos.length) {
+        aviso.textContent = "O membro selecionado não tem tipos de eventos preferidos.";
+        aviso.style.display = "block";
+
+        setTimeout(() => {
+            aviso.style.display = "none";
+        }, 3000);
+        
+        return;
+    }
+
+    const eventosFiltrados = eventos.filter((evento) =>
+        membroSelecionado.tipos.includes(evento.tipo)
+    );
+
+    const select = document.getElementById("eventos-select");
+
+    while (select.firstChild) {
+        select.removeChild(select.firstChild);
+    }
+
+    if (eventosFiltrados.length > 0) {
+        eventosFiltrados.forEach((evento) => {
+            const option = document.createElement("option");
+            option.value = evento.id;
+            option.textContent = evento.descritivo;
+            select.appendChild(option);
+        });
+
+        document.getElementById("form-inscricao-evento").style.display = "block";
+        aviso.style.display = "none";
+    } else {
+        aviso.textContent = "Não há eventos disponíveis para os tipos de eventos preferidos do membro.";
+        aviso.style.display = "block";
+
+        setTimeout(() => {
+            aviso.style.display = "none";
+        }, 3000);
+    }
+    
+}
+
+/**
+ * Fecha o formulário de inscrição em eventos.
+ */
+function fecharFormularioInscricaoEvento() {
+    document.getElementById("form-inscricao-evento").style.display = "none";
+}
+
+let proximoIdEventoTabela = 1;
+
+/**
+ * Aceita a inscrição do membro selecionado no evento escolhido.
+ * Adiciona o evento à lista de eventos do membro e atualiza a tabela.
+ */
+function aceitarInscricaoEvento() {
+    const aviso = document.getElementById('aviso-membro-inscricao');
+    aviso.style.display = "none";  
+
+    const select = document.getElementById("eventos-select");
+    const eventoIdSelecionado = parseInt(select.value, 10);
+
+    if (!eventoIdSelecionado) {
+        aviso.textContent = "Por favor, selecione um evento.";
+        aviso.style.display = "block";
+
+        setTimeout(() => {
+            aviso.style.display = "none";
+        }, 3000);
+
+        return;
+    }
+
+    const eventoSelecionado = eventos.find((evento) => evento.id === eventoIdSelecionado);
+
+
+    const membroSelecionado = membros.find((m) => m.id === membroSelecionadoId);
+
+    if (!membroSelecionado.eventos) {
+        membroSelecionado.eventos = [];
+        membroSelecionado.proximoIdEvento = 1; 
+    }
+
+    membroSelecionado.eventos.push({
+        id: membroSelecionado.proximoIdEvento++,
+        tipo: eventoSelecionado.tipo,
+        descritivo: eventoSelecionado.descritivo,
+        data: eventoSelecionado.data,
+    });
+
+    atualizarTabelaEventosDoMembro(membroSelecionado);
+
+    fecharFormularioInscricaoEvento();
+
+    aviso.textContent = `Inscrição no evento "${eventoSelecionado.descritivo}" foi realizada com sucesso!`;
+    aviso.style.color = "green";  
+    aviso.style.display = "block";
+
+    setTimeout(() => {
+        aviso.style.display = "none";
+        aviso.style.color = "red";  
+    }, 3000);
+}
+
+/**
+ * Atualiza a tabela de eventos do membro, exibindo os eventos associados ao membro.
+ * Limpa a tabela e adiciona as novas linhas com os eventos.
+ * @param {Object} membro - O membro cujos eventos serão exibidos.
+ */
+function atualizarTabelaEventosDoMembro(membro) {
+    const tabelaCorpo = document.querySelector("#eventos-tabela tbody");
+
+    while (tabelaCorpo.firstChild) {
+        tabelaCorpo.removeChild(tabelaCorpo.firstChild);
+    }
+
+    if (membro.eventos) {
+        membro.eventos.forEach((evento) => {
+            const linha = document.createElement("tr");
+
+            const colunaId = document.createElement("td");
+            colunaId.textContent = evento.id;
+            linha.appendChild(colunaId);
+
+            const colunaTipo = document.createElement("td");
+            colunaTipo.textContent = evento.tipo;
+            linha.appendChild(colunaTipo);
+
+            const colunaDescritivo = document.createElement("td");
+            colunaDescritivo.textContent = evento.descritivo;
+            linha.appendChild(colunaDescritivo);
+
+            const colunaData = document.createElement("td");
+            colunaData.textContent = evento.data;
+            linha.appendChild(colunaData);
+
+            tabelaCorpo.appendChild(linha);
+        });
+    }
+
+    configurarSelecaoDeLinhas();
+}
+
+document.getElementById("btn-inscrever-evento").addEventListener("click", abrirFormularioInscricaoEvento);
+document.getElementById("btn-aceitar-evento").addEventListener("click", aceitarInscricaoEvento);
+document.getElementById("btn-cancelar-evento").addEventListener("click", fecharFormularioInscricaoEvento);
+
+let eventoSelecionadoId = null;
+
+
+/**
+ * Configura a seleção de linhas da tabela de eventos, permitindo que um evento seja selecionado.
+ */
+function configurarSelecaoDeLinhas() {
+    const linhas = document.querySelectorAll("#eventos-tabela tbody tr");
+
+    linhas.forEach((linha) => {
+        linha.addEventListener("click", () => {
+            const idLinha = parseInt(linha.querySelector("td").textContent, 10);
+
+            if (eventoSelecionadoId === idLinha) {
+                linha.classList.remove("selected-row");
+                eventoSelecionadoId = null;
+            } else {
+                linhas.forEach((l) => l.classList.remove("selected-row"));
+                linha.classList.add("selected-row");
+                eventoSelecionadoId = idLinha;
+            }
+        });
+    });
+}
+
+/**
+ * Desinscreve o membro do evento selecionado.
+ * Remove o evento da lista de eventos do membro e atualiza a tabela de eventos.
+ */
+function desinscreverEvento() {
+    const aviso = document.getElementById('aviso-membro-inscricao');
+    aviso.style.display = "none";  
+
+    if (!eventoSelecionadoId) {
+        aviso.textContent = "Por favor, selecione um evento para desinscrever.";
+        aviso.style.display = "block";
+        
+        setTimeout(() => {
+            aviso.style.display = "none";
+            aviso.style.color = "red";  
+        }, 3000);
+
+        return;
+    }
+
+    const membroSelecionado = membros.find((m) => m.id === membroSelecionadoId);
+
+    if (!membroSelecionado || !membroSelecionado.eventos) {
+        aviso.textContent = "Nenhum membro ou eventos encontrados.";
+        aviso.style.display = "block";
+
+        setTimeout(() => {
+            aviso.style.display = "none";
+            aviso.style.color = "red";  
+        }, 3000);
+
+        return;
+    }
+
+    membroSelecionado.eventos = membroSelecionado.eventos.filter(
+        (evento) => evento.id !== eventoSelecionadoId
+    );
+
+    eventoSelecionadoId = null;
+
+    atualizarTabelaEventosDoMembro(membroSelecionado);
+
+    configurarSelecaoDeLinhas();
+
+    aviso.textContent = "Desinscrição realizada com sucesso!";
+    aviso.style.color = "green";  
+    aviso.style.display = "block";
+
+    setTimeout(() => {
+        aviso.style.display = "none";
+        aviso.style.color = "red";  
+    }, 3000);
+}
+
+
+document.getElementById("btn-desinscrever-evento").addEventListener("click", desinscreverEvento);
+
+
+
+window.onload = function() {
+    showSection('eventos-section');
+    renderEventos();
+    renderTiposEventos();
+};
+
+
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Evento.html">Evento</a></li><li><a href="TipoEvento.html">TipoEvento</a></li></ul><h3>Global</h3><ul><li><a href="global.html#abrirFormularioEvento">abrirFormularioEvento</a></li><li><a href="global.html#abrirFormularioInscricaoEvento">abrirFormularioInscricaoEvento</a></li><li><a href="global.html#abrirFormularioMembro">abrirFormularioMembro</a></li><li><a href="global.html#aceitarInscricaoEvento">aceitarInscricaoEvento</a></li><li><a href="global.html#apagarEvento">apagarEvento</a></li><li><a href="global.html#apagarMembro">apagarMembro</a></li><li><a href="global.html#apagarTipoEvento">apagarTipoEvento</a></li><li><a href="global.html#atualizarCheckboxesTiposEventos">atualizarCheckboxesTiposEventos</a></li><li><a href="global.html#atualizarDropdownTiposEventos">atualizarDropdownTiposEventos</a></li><li><a href="global.html#atualizarTabelaEventosDoMembro">atualizarTabelaEventosDoMembro</a></li><li><a href="global.html#atualizarTabelaMembros">atualizarTabelaMembros</a></li><li><a href="global.html#configurarSelecaoDeLinhas">configurarSelecaoDeLinhas</a></li><li><a href="global.html#criarCelulaTexto">criarCelulaTexto</a></li><li><a href="global.html#criarTipoEvento">criarTipoEvento</a></li><li><a href="global.html#desinscreverEvento">desinscreverEvento</a></li><li><a href="global.html#editarEvento">editarEvento</a></li><li><a href="global.html#editarMembro">editarMembro</a></li><li><a href="global.html#editarTipoEvento">editarTipoEvento</a></li><li><a href="global.html#fecharFormularioEvento">fecharFormularioEvento</a></li><li><a href="global.html#fecharFormularioInscricaoEvento">fecharFormularioInscricaoEvento</a></li><li><a href="global.html#fecharFormularioMembro">fecharFormularioMembro</a></li><li><a href="global.html#fecharFormularioTipoEvento">fecharFormularioTipoEvento</a></li><li><a href="global.html#gravarEvento">gravarEvento</a></li><li><a href="global.html#gravarMembro">gravarMembro</a></li><li><a href="global.html#gravarTipoEvento">gravarTipoEvento</a></li><li><a href="global.html#limparCamposFormularioEvento">limparCamposFormularioEvento</a></li><li><a href="global.html#renderEventos">renderEventos</a></li><li><a href="global.html#renderTiposEventos">renderTiposEventos</a></li><li><a href="global.html#selecionarLinha">selecionarLinha</a></li><li><a href="global.html#selecionarLinhaEvento">selecionarLinhaEvento</a></li><li><a href="global.html#selecionarOuDeselecionarLinha">selecionarOuDeselecionarLinha</a></li><li><a href="global.html#showSection">showSection</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Dec 19 2024 14:58:48 GMT+0000 (Western European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

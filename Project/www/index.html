@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESTSBike - Clube de Ciclismo</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <script src="scripts/script.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+</head>
+
+<body onload="start();">
+    <div class="super-container">
+
+        <!-- HEADER ################################################################### -->
+
+        <header>
+            <div class="container">
+                <h1>ESTSBike - Clube de Ciclismo</h1>
+                <nav id="nav-links">
+                    <ul>
+                        <li><a style="cursor: pointer" onclick="UserInterface.setView('viewMembros');">
+                                Membros</a></li>
+                        <li><a style="cursor: pointer" onclick="UserInterface.setView('viewEventos');">
+                                Eventos</a></li>
+                        <li><a style="cursor: pointer" onclick="UserInterface.setView('viewTiposEventos');">
+                                Tipos de Eventos</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- MAIN ################################################################### -->
+
+        <main>
+
+            <!-- GESTÃO DE MEMBROS -->
+
+            <div id='viewMembros' class="container">
+                <div id="gestaoMembros" class="container containerFeed"></div>
+                <div id="formularioMembro" class="container containerOptions"></div>
+            </div>
+
+            <!-- GESTÃO DE EVENTOS -->
+
+            <div id='viewEventos' class="container">
+                <div id="gestaoEventos" class="container containerFeed"></div>
+                <div id="formularioEvento" class="container containerOptions"></div>
+            </div>
+
+            <!-- GESTÃO DE TIPOS DE EVENTOS -->
+
+            <div id='viewTiposEventos' class="container">
+                <div id="gestaoTiposEventos" class="container containerFeed"></div>
+                <div id="formularioTipoEvento" class="container containerOptions"></div>
+            </div>
+
+        </main>
+
+        <!-- FOOTER ################################################################### -->
+        <footer>
+            <div class="container">
+                <a>2024 - Tecnologia Setúbal - Programação para a Web</a>
+            </div>
+        </footer>
+        
+    </div>
+</body>
+</html>

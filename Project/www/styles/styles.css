@@ -1,0 +1,225 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #1d2a44;
+    color: #ffffff;
+    padding: 1em;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 1.5em;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5em;
+}
+
+nav ul li {
+    margin: 0 1em;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.section {
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 1em;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
+h2 {
+    text-align: center;
+    color: #1d2a44;
+    margin-bottom: 1em;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+}
+
+.table th, .table td {
+    padding: 0.75em;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.table thead {
+    background-color: #1d2a44;
+    color: #ffffff;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row; /* Stack buttons vertically */
+    gap: 10px; /* Adds spacing between buttons */
+    align-items: center; /* Centers the buttons */
+    width: 100%;
+}
+
+.btn {
+    width: 100%; /* Make buttons take full width of container */
+    max-width: 200px; /* Prevent them from being too wide */
+    text-align: center;
+    padding: 0.5em 1em;
+    background-color: #1d2a44;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #3c4a68;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 1em;
+    padding: 1em;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.form-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch; /* Ensures buttons expand fully */
+    width: 100%;
+}
+
+.selected-row {
+    background-color: #d1e7ff;
+}
+
+
+.button-container button + button {
+    margin-left: 10px;
+}
+
+.fieldset {
+    border: 1px solid #ccc;
+    padding: 1em;
+    border-radius: 5px;
+    margin-top: 1em;
+}
+
+.fieldset legend {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+#aviso-membro, #aviso-selecao-membro {
+    font-size: 0.9em;
+    color: #ff0000;
+    margin-top: 1em;
+    text-align: center;
+}
+
+.form-buttons .btn {
+    width: 100%;
+    display: block;
+}
+
+.btn {
+    background-color: #001f3f; 
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #004080; 
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    text-align: left;
+}
+
+table th, table td {
+    border: 1px solid #001f3f;
+    padding: 10px;
+}
+
+.highlight {
+    background-color: lightblue;
+}
+
+.structure {
+    /* Center the content both vertically and horizontally */
+    display: flex;
+    flex-direction: column;     /* Stack buttons vertically */
+    justify-content: center;    /* Center vertically within the parent */
+    align-items: center;        /* Center horizontally within the parent */
+}
+
+.container {
+    
+    display: flex;
+    flex-direction: column; /* Align children in a column */
+    justify-content: flex-start; /* Align the items at the top (default behavior) */
+    align-items: center; /* Center horizontally */
+    box-sizing: border-box;
+    margin: calc(var(--root-space) * 2);
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    position: relative;
+    bottom: 0;
+}
+
+.super-container {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--root-background-color);
+    height: 100vh !important;
+}
+
+main {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-around;
+}
+
+#mensagemErro {
+    font-size: 0.9em;
+    color: #ff0000;
+    margin-top: 1em;
+    text-align: center;
+}
